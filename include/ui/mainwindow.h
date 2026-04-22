@@ -91,6 +91,8 @@ public:
 
     void setDownloadReport(const DownloadProgressReport& report, bool show);
 
+    void setAnnounceMessage(const QString &announce);
+
 signals:
 
     void profile_selected(int id);

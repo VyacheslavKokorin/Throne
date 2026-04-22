@@ -45,6 +45,8 @@ public:
 
     void addTestProgress(int count = 1);
 
+    void setAnnounce(const QString &announce);
+
     QString buildHtml();
 
 private:
@@ -56,9 +58,12 @@ private:
 
     QString latencyTestSectionHtml();
 
+    QString announceSectionHtml() const;
+
     DownloadPanelState download_ = {};
     SpeedtestPanelState speedtest_ = {};
     LatencyTestPanelState latencyTest_ = {};
+    QString announce_;
 
     std::atomic<int> testProgress;
 };
