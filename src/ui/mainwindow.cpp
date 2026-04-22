@@ -1210,7 +1210,10 @@ void MainWindow::dialog_message_impl(const QString &sender, const QString &info)
             this->refresh_groups();
         }
     } else if (sender == "SubUpdater") {
-        if (info.startsWith("finish")) {
+        if (info.startsWith("announce:")) {
+            setAnnounceMessage(info.mid(QString("announce:").length()));
+            UpdateDataView(true);
+        } else if (info.startsWith("finish")) {
             refresh_proxy_list({}, true);
             if (!info.contains("dingyue")) {
                 MW_show_log(tr("Imported %1 profile(s)").arg(Configs::dataManager->settingsRepo->imported_count));
@@ -1504,6 +1507,10 @@ void MainWindow::setDownloadReport(const DownloadProgressReport& report, bool sh
     dataViewHtmlGenerator_.setDownloadReport(report, show);
 }
 
+void MainWindow::setAnnounceMessage(const QString &announce)
+{
+    dataViewHtmlGenerator_.setAnnounce(announce);
+}
 
 void MainWindow::setupConnectionList()
 {

@@ -610,6 +610,7 @@ namespace Subscription {
 
         // 准备
         QString sub_user_info;
+        QString sub_announce;
         bool asURL = _sub_gid >= 0 || _not_sub_as_url; // 把 _str 当作 url 处理（下载内容）
         auto content = _str.trimmed();
         auto group = Configs::dataManager->groupsRepo->GetGroup(_sub_gid);
@@ -628,6 +629,17 @@ namespace Subscription {
 
             content = resp.data;
             sub_user_info = NetworkRequestHelper::GetHeader(resp.header, "Subscription-UserInfo");
+            sub_announce = NetworkRequestHelper::GetHeader(resp.header, "announce");
+            if (sub_announce.startsWith("base64:", Qt::CaseInsensitive)) {
+                const auto encoded = sub_announce.mid(QString("base64:").length()).trimmed();
+                const auto decoded = QByteArray::fromBase64(encoded.toUtf8());
+                if (!decoded.isEmpty()) {
+                    sub_announce = QString::fromUtf8(decoded);
+                } else if (!encoded.isEmpty()) {
+                    sub_announce = encoded;
+                }
+            }
+            MW_dialog_message("SubUpdater", "announce:" + sub_announce);
 
             MW_show_log("<<<<<<<< " + QObject::tr("Subscription request fininshed: %1").arg(groupName));
         }

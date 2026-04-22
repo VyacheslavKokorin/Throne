@@ -41,8 +41,15 @@ void DataViewHtmlGenerator::addTestProgress(int count) {
     testProgress.fetch_add(count);
 }
 
+void DataViewHtmlGenerator::setAnnounce(const QString &announce) {
+    announce_ = announce.trimmed();
+}
+
 QString DataViewHtmlGenerator::buildHtml() {
     QString html;
+    if (!announce_.isEmpty()) {
+        html += announceSectionHtml();
+    }
     if (download_.visible) {
         html += downloadSectionHtml();
     }
@@ -121,4 +128,8 @@ QString DataViewHtmlGenerator::latencyTestSectionHtml() {
     }
     res += QString("<p style='text-align:center;margin:0;'>%1</p>").arg(content);
     return res;
+}
+
+QString DataViewHtmlGenerator::announceSectionHtml() const {
+    return QString("<p style='text-align:right;margin:0;'><b>Announce:</b> %1</p>").arg(announce_.toHtmlEscaped());
 }
